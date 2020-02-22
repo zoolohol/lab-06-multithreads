@@ -1,5 +1,4 @@
 // Copyright 2018 Your Name <your_email>
-
 #include <header.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
@@ -16,22 +15,20 @@ namespace src = boost::log::sources;
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
 
-int main(int argc, char* argv[]){\
-
+int main(int argc, char* argv[]){
     boost::shared_ptr< logging::core > core = logging::core::get();
-
     // File sink
     boost::shared_ptr< sinks::text_file_backend > fileBackend =
             boost::make_shared< sinks::text_file_backend >(
                     keywords::file_name = "/home/rooted/sample_%N.log",
                     keywords::rotation_size = 10 * 1024 * 1024,
-                    keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0),
+                    keywords::time_based_rotation =
+                            sinks::file::rotation_at_time_point(0, 0, 0),
                     keywords::format = "[%TimeStamp%]: %Message%"
     );
     typedef sinks::synchronous_sink< sinks::text_file_backend > fileSink_t;
     boost::shared_ptr< fileSink_t > fileSink(new fileSink_t(fileBackend));
     core->add_sink(fileSink);
-
     // Console sink
     boost::shared_ptr< sinks::text_ostream_backend> backend =
             boost::make_shared< sinks::text_ostream_backend >();
@@ -40,18 +37,16 @@ int main(int argc, char* argv[]){\
     typedef sinks::synchronous_sink< sinks::text_ostream_backend > sink_t;
     boost::shared_ptr< sink_t > sink(new sink_t(backend));
     core->add_sink(sink);
-
     logging::add_common_attributes();
-
     using namespace logging::trivial;
     src::severity_logger<severity_level> lg;
 
-    std::srand(std::time(nullptr)); // NOLINT(cert-msc32-c,cert-msc51-cpp)
+    std::srand(static_cast<unsigned int>(std::time(nullptr))); // NOLINT(cert-msc32-c,cert-msc51-cpp)
 
     unsigned int threadCount;
 
-    if(argc > 1){
-        threadCount = std::stoi(argv[1]);
+    if (argc > 1) {
+        threadCount = static_cast<unsigned int>(std::stoi(argv[1]));
     }
     else{
         threadCount = std::thread::hardware_concurrency();
@@ -68,7 +63,7 @@ int main(int argc, char* argv[]){\
                     auto x = 31;
                     while (x < 32 || x > 125) {
 
-                        x = 32 + std::rand() / ((RAND_MAX + 1u) / 94); // NB: 32 + std::rand()%94 is biased NOLINT(cert-msc30-c)
+                        x = 32 + std::rand() / ((RAND_MAX + 1u) / 94); //NOLINT(cert-msc30-c, cert-msc51-cpp)
 
                     }
                     return x;

@@ -26,9 +26,3 @@ notifications:
 branches:
   except:
   - master
-
-
-
-
-
-
